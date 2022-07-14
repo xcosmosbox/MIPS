@@ -2,7 +2,7 @@
 
     .data
 
-fill: .asciiz "You haven't started task 2 yet\n"
+fill: .asciiz "You haven't started task 3 yet\n"
 
     .text
 
