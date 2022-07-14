@@ -18,12 +18,12 @@ before_script:
   - pip install virtualenv
   - virtualenv venv
   - source venv/bin/activate
-  - apt-get install -y default-jre
 
 test:
   stage: test
   before_script:
     - pip install -r requirements.txt
+    - apt-get install -y default-jre
   script:
     - python run_tests.py
   artifacts:
