@@ -57,3 +57,13 @@ class BaseTest(unittest.TestCase):
             content = f.read()
         
         self.assertEqual(res, content)
+
+    def mars_test_function_in_out(self, filename_tester, filename, fileIn, fileOut):
+        child = subprocess.run(["java", "-jar", self.MARS_filepath, os.path.join(TEST_DIR, filename_tester), os.path.join(SOURCE_DIR, filename)], stdin=open(os.path.join(TEST_DIR, fileIn), "r"), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        if child.returncode != 0:
+            raise Exception(child.stderr.read())
+        res = child.stdout.decode('utf-8')
+        with open(os.path.join(TEST_DIR, fileOut), "r") as f:
+            content = f.read()
+        
+        self.assertEqual(res, content)
