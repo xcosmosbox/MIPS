@@ -23,6 +23,7 @@ test:
   stage: test
   before_script:
     - pip install -r requirements.txt
+    - apt update
     - apt-get install -y default-jre
   script:
     - python run_tests.py
