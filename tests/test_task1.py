@@ -28,7 +28,3 @@ class TestTask1(BaseTest):
     @timeout(2)
     def test1_5(self):
         self.mars_test_in_out("task1.asm", "task1/5.in", "task1/5.out")
-    
-    @timeout(2)
-    def test1_1_hidden(self):
-        self.mars_test_in_out("task1.asm", "task1/hidden/1_h.in", "task1/hidden/1_h.out")
