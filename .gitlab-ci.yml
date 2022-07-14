@@ -18,6 +18,7 @@ before_script:
   - pip install virtualenv
   - virtualenv venv
   - source venv/bin/activate
+  - apt-get install -y default-jre
 
 test:
   stage: test
