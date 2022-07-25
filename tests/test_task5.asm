@@ -1,7 +1,7 @@
 			.data
 prompt_len: .asciiz "Array length: "
 prompt_num: .asciiz "Enter num: "
-prompt_targ:.asciiz "Enter target: "
+prompt_r:   .asciiz "Enter r: "
 space:		.asciiz " "
 i:			.word 	0
 
@@ -69,47 +69,31 @@ read_loop:	# while i < len(the_list)
 
 			j read_loop
 			
-endfor:		# Prompt for the target
+endfor:		# Prompt for the r
             addi $v0, $0, 4
-            la $a0, prompt_targ
+            la $a0, prompt_r
 			syscall
 
-			# Read target
+			# Read r
 			addi $v0, $0, 5
 			syscall
 			sw $v0, -12($fp)
 
-			# Call binary_search(my_list)
-			addi $sp, $sp, -16 # make space for 1 argument
-
+			# Call print_combinations(my_list, n, r)
+			# 1. Pass arguments
+			addi $sp, $sp, -12
 			lw $t0, -8($fp)   	# load the address of the start of my_list
 			sw $t0, 0($sp)    	# store it as arg 1
-
-			lw $t0, -12($fp)	# load target
-			sw $t0, 4($sp)		# store it as arg 2
-			
-			addi $t0, $0, 0		# low = 0
+			lw $t0, -8($fp)  
+			lw $t0, ($t0)       # size of arr
+			sw $t0, 4($sp)    	# store it as arg 2
+			lw $t0, -12($fp) 	# r
 			sw $t0, 8($sp)		# store it as arg 3
+			# 2. Call function
+			jal print_combination
 			
-			lw $t0, -8($fp)		# &the_list
-			lw $t0, ($t0)		# len(the_list)
-			addi $t0, $t0, -1	# high = len(the_list) - 1
-			sw $t0, 12($sp)		# store it as arg 4
-
-			jal binary_search   # call binary_search
-			addi $sp, $sp, 16  # remove the argument
-
-			# print(index)
-			add $a0, $v0, $0
-			addi $v0, $0, 1
-			syscall
-			
-			# print("\n")
-			addi $v0, $0, 11
-			addi $a0, $0, 10
-			syscall
-
-			addi $sp, $sp, 16
+			# 1. Clear Arguments off stack
+			addi $sp, $sp, 12
 
 			# Exit the program
 			addi $v0, $0, 10  # $v0 = 10 for exiting the program
