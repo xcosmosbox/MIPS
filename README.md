@@ -1,10 +1,10 @@
-# Assignment 1 Template
+# Assignment 1 README file
 
-Template repository for use in Assignment 1.
+The repository for use in 1008-Assignment 1.
 
 ## Members
 
-* John Smith jsmi0000@student.monash.edu
+* Yuxiang Feng
 
 ## TODO
 
