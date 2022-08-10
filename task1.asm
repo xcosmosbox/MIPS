@@ -16,7 +16,7 @@
 	ret_int:	   .word	0
 	ret_rem:	   .word	0
 	welcom:		   .asciiz	"Welcome to the Thor Electrical Company!\n"
-	newLine: 	   .asciiz 	" \n"
+	newLine: 	   .asciiz 	"\n"
 	prompt:		   .asciiz 	"Enter your age: "
 	prompt2:	   .asciiz	"Enter your total consumption in kWh: "
 	prompt3:	   .asciiz	"Mr Loki Laufeyson, your electricity bill is $"
@@ -270,8 +270,8 @@
 		#Tell the system this end of program.
 		#li $v0,10
 		#syscall
-		addi $v0, $s0, 10
-		syscall
+		#addi $v0, $s0, 10
+		#syscall
 	
 	
 	
