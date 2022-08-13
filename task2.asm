@@ -12,7 +12,7 @@
 	prompt:		.asciiz 	"How tall do you want the tower: "
 	top:		.asciiz		"A "
 	un_top:		.asciiz		"* "
-	TEST:		.asciiz		"!TEST!"
+	TEST:		.asciiz		"!TEST!s"
 	TEST2:		.asciiz		"#F!"
 	
 .text
