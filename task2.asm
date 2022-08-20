@@ -23,9 +23,9 @@
 		
 	#exit the program
 	# Print newline
-	addi $v0, $0, 4
-	la $a0, newLine
-	syscall
+	#addi $v0, $0, 4
+	#la $a0, newLine
+	#syscall
 	#addi $v0,$0,4
 	#la $a0, TEST
 	#syscall
