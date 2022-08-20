@@ -1,3 +1,4 @@
+.globl insertion_sort
 .data
 
 	newline:	.asciiz		"\n"
