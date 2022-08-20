@@ -209,7 +209,7 @@ main:
     	addi $t1, $0, 4
     	sw $t1, 16($t0)
     	# add 10
-    	addi $t1, $0, 10
+    	addi $t1, $0, -10
     	sw $t1, 20($t0)
     	
     	#init i
