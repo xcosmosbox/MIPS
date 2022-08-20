@@ -9,19 +9,19 @@ space:	    .asciiz " "
 
 .text
 
+# go to main func
 jal main
 
+#exit the program
 addi $v0, $0, 10
 syscall
+
 
 
 combination_aux:
 
             # memory diagram
             ###########################
-            # temp_3      : -16($fp)  #
-            # temp_2      : -12($fp)  #
-            # temp_1      : -8($fp)   #
             # j           : -4($fp)   #
             # fp          : ($fp)     #
             # ra          : 4($fp)    #
@@ -42,11 +42,9 @@ combination_aux:
         # copy $sp to $fp
         addi $fp, $sp, 0
 
-        # four local variable
-        addi $sp, $sp, -16
+        # one local variable
+        addi $sp, $sp, -4
         
-        # make space for six argument
-        addi $sp, $sp, -24
 	
 	#init the local j=0
 	addi $t0,$0,0
@@ -55,8 +53,7 @@ combination_aux:
 	#get index-r
 	lw $t0,20($fp)#get index
 	lw $t1,16($fp)#get r
-	sub $t2,$t0,$t1#index-i
-	beq $t2,$0,the_first_if #if index-i == 0, then goto the_first_loop
+	beq $t0,$t1,the_first_if#if index == r,then goto the_first_if
 	
 	#check i>=n
 	lw $t0,28($fp)#get i
@@ -82,9 +79,8 @@ combination_aux:
 	mflo $t3
 	add $t3,$t3,$t2 #new_index = 4*index + 4
 	add $t3,$t3,$t0 #the addr for arr[new_index]
-	lw $t5,($t3) #get the value of arr[new_index]
 	
-	#data[index] = arr[i]
+	#set data[index] = arr[i]
 	sw $t4, ($t3)
 	
 	#Call combination_aux(arr, n, r, index + 1,data, i + 1)
@@ -97,10 +93,10 @@ combination_aux:
 	# store arr as the first argument
         lw $t0,8($fp)
         sw $t0, ($sp) #(arr)
-        # store arr as the second argument
+        # store n as the second argument
         lw $t0,12($fp)
         sw $t0, 4($sp) #(arr,n)
-        # store arr as the third argument
+        # store r as the third argument
         lw $t0,16($fp)
         sw $t0, 8($sp) #(arr,n,r)
         # store index+1 as the fourth argument
@@ -114,26 +110,23 @@ combination_aux:
         jal combination_aux
         
         #remove space of 6 argument
-        addi $sp,$sp,24
+        addi $sp,$sp,24	
         
-        #store the return value in temp_1
-        sw $v0,-8($fp)
-        
+
         
         #Call function combination_aux(arr, n, r, index,data, i + 1)
 	lw $t3,20($fp)#get index
 	lw $t4,28($fp)#get i
-	#addi $t3,$t3,1#index + 1
 	addi $t4,$t4,1#i+1
 	#make space for six argument 
 	addi $sp,$sp,-24
 	# store arr as the first argument
         lw $t0,8($fp)
         sw $t0, ($sp) #(arr)
-        # store arr as the second argument
+        # store n as the second argument
         lw $t0,12($fp)
         sw $t0, 4($sp) #(arr,n)
-        # store arr as the third argument
+        # store r as the third argument
         lw $t0,16($fp)
         sw $t0, 8($sp) #(arr,n,r)
         # store index as the fourth argument
@@ -149,13 +142,10 @@ combination_aux:
         #remove space of 6 argument
         addi $sp,$sp,24
         
-        #store the return value in temp_1
-        sw $v0,-8($fp)
+        # remove local variable
+        addi $sp, $sp, 4
         
         
-	#deallocate space for local variables
-	addi $sp,$sp,16
-	
 	#restore $fp and $ra and deallocate
 	lw $fp,($sp)
 	lw $ra,4($sp)
@@ -180,15 +170,9 @@ combination_aux:
         	addi $v0, $0, 4
         	syscall
         	
-        	#remove space of 6 argument
-        	addi $sp,$sp,24
-        
-        	#store the return value in temp_1
-        	sw $v0,-8($fp)
-        
         
 		#deallocate space for local variables
-		addi $sp,$sp,16
+		addi $sp,$sp,4
 	
 		#restore $fp and $ra and deallocate
 		lw $fp,($sp)
@@ -210,11 +194,9 @@ combination_aux:
 		mflo $t3
 		add $t3,$t3,$t2 #new_index = 4*j + 4
 		add $t3,$t3,$t0 #the addr for data[j]
-		lw $t5,($t3) #get the value of data[j]
 		
 		#print data[j]
-		sw $t5,-12($fp)
-		lw $a0, -12($fp)    # load the value of data[j]
+		lw $a0,($t3) #get the value of data[j]
         	addi $v0, $0, 1
         	syscall
         	
@@ -235,31 +217,18 @@ combination_aux:
 	
 	
 	the_sec_if:
-		#remove space of 6 argument
-        	addi $sp,$sp,24
-        
-        	#store the return value in temp_1
-        	sw $v0,-8($fp)
-        
-        
 		#deallocate space for local variables
-		addi $sp,$sp,16
+		addi $sp,$sp,4
 	
 		#restore $fp and $ra and deallocate
 		lw $fp,($sp)
 		lw $ra,4($sp)
 		addi $sp,$sp,8
+		
 	
 		jr $ra
 	
 	
-	
-	
-	
-	
-	
-
-
 
 
 
@@ -267,7 +236,6 @@ print_combination:
 
             # memory diagram
             ###########################
-            # temp_index  : -8($fp)   #
             # data        : -4($fp)   #
             # fp          : ($fp)     #
             # ra          : 4($fp)    #
@@ -284,24 +252,24 @@ print_combination:
         # copy $sp to $fp
         addi $fp, $sp, 0
 
-        # two local variable(maybe)
-        addi $sp, $sp, -8
+        # one local variable(maybe)
+        addi $sp, $sp, -4
         
         # make space for six argument
         addi $sp, $sp, -24
         
         #allocate memory for array(data)
 	addi $v0,$zero, 9 #allocate the memory system call
-	addi $a0,$zero, 24 #(5*4)+4
+	addi $a0,$zero, 16 #(3*4)+4
 	syscall
 	
 	#init the local data
 	sw $v0,-4($fp) #data=[]
-	addi $t0,$zero,5 #assign length
-	sw $t0, ($v0)                   # store the length as the first element
+	addi $t0,$zero,3 #assign length
+	sw $t0, ($v0) # store the length as the first element
 	
 	# add the elements to the array data
-    	lw $t0, -4($fp)                 # load the starting address of the list
+    	lw $t0, -4($fp) # load the starting address of the list
 	
 	# add 0
     	addi $t1, $0, 0
@@ -312,12 +280,7 @@ print_combination:
     	# add 0
     	addi $t1, $0, 0
     	sw $t1, 12($t0)
-    	# add 0
-    	addi $t1, $0, 0
-    	sw $t1, 16($t0)
-    	# add 0
-    	addi $t1, $0, 0
-    	sw $t1, 20($t0)
+    	
     	
     	# store arr as the first argument
         lw $t0,8($fp)
@@ -346,7 +309,20 @@ print_combination:
         # call the funtion
         jal combination_aux
     
-                
+        # deallocate args
+        addi $sp, $sp, 24
+
+        # deallocate locals
+        addi $sp, $sp, 4
+        
+        # restore $fp and $ra
+        lw $fp, ($sp)
+        lw $ra, 4($sp)
+
+        # deallocate space for $fp and $ra
+        addi $sp, $sp, 8
+
+        jr $ra
                             
                                         
                                                     
@@ -385,10 +361,10 @@ main:
 	#init the local arr
 	sw $v0,-4($fp) #arr=[]
 	addi $t0,$zero,5
-	sw $t0, ($v0)                   # store the length as the first element
+	sw $t0, ($v0) # store the length as the first element
 	
 	# add the elements to the array
-    	lw $t0, -4($fp)                 # load the starting address of the list
+    	lw $t0, -4($fp) # load the starting address of the list
 	
 	# add 1
     	addi $t1, $0, 1
@@ -414,17 +390,7 @@ main:
     	lw $t1,-4($fp)#get arr
     	lw $t2,($t1)#get n=len(arr)==(5)
     	sw $t2,-12($fp)
-    	
-    	###  ONLY TEST  ###
-    	#print r and n
-        #lw $a0, -8($fp)         # load the value of r
-        #addi $v0, $0, 1
-        #syscall
-        #lw $a0, -12($fp)         # load the value of n
-        #addi $v0, $0, 1
-        #syscall
-        ###  ONLY TEST  ###
-        
+    	       
 
         # store arr as the first argument
         lw $t0,-4($fp)
@@ -443,28 +409,9 @@ main:
         # call the funtion
         jal print_combination
         
-        
-        
-        
-        
-        
-        
 
         # deallocate the space for the argument
         addi $sp, $sp, 12
-
-        # store the return value in res
-        sw $v0, -4($fp)
-
-        # print the value of res
-        #lw $a0, -4($fp)
-        #addi $v0, $0, 1
-        #syscall
-
-        # print newline
-        la $a0, newline
-        addi $v0, $0, 4
-        syscall
         
         # deallocate space for local var
         addi $sp, $sp, 12
@@ -477,3 +424,5 @@ main:
         addi $sp, $sp, 8
 
         jr $ra
+
+
