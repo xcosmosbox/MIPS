@@ -1,3 +1,4 @@
+.globl smash_or_sad
 .data
 	my_list:	.word		0
 	my_list_length:	.word		0
