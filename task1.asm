@@ -21,7 +21,6 @@
 	prompt2:	   .asciiz	"Enter your total consumption in kWh: "
 	prompt3:	   .asciiz	"Mr Loki Laufeyson, your electricity bill is $"
 	prompt4:	   .asciiz	"."
-	testMsg:	   .asciiz	"TESTTESTTESTTESTTEST!!!\n"
 .text
 	main:
 		# print Welcome
@@ -56,17 +55,12 @@
 		
 		
 	setDiscountFlag:
-		# Function Test
-		#li $v0, 4
-		#la $a0,testMsg
-		#syscall
+		# set discount_flag = 1
 		lw $t2, discount_flag
 		addi $t2,$t2,1
 		sw $t2,discount_flag
-		#Function Test
-		#li $v0, 4
-		#la $a0,testMsg
-		#syscall
+		
+		#goto setkWh
 		j setkWh
 		
 
@@ -98,36 +92,29 @@
 		
 		
 	flag_check:
+		#According to discount_flag flag values go to different branches
 		lw $t2,discount_flag
 		bne $t2,$zero,discount_label
 		beq $t2,$zero,un_discount_label		
 		
 			
 	discount_label:
-		#addi $v0,$0,1
-		#lw $a0, discount_flag
-		#syscall
 		# Change tier_three_price
 		lw $t2,tier_three_price
 		sub $t2,$t2,2
 		sw $t2,tier_three_price
+
 		# Getting the excess
 		lw $t3,consumption
 		sub $t3,$t3,1000
 		# ((consumption-1000)*tier_three_price)
 		mult $t3,$t2
 		mflo $t4
-		#sw $t4,temp_cost
-		#addi $v0,$0,1
-		#lw $a0,temp_cost
-		#syscall
 		lw $t5,total_cost
 		add $t4,$t4,$t5
 		sw $t4,total_cost
-		#addi $v0,$0,1
-		#lw $a0,total_cost
-		#syscall
-		# consumption = 1000
+
+		# set consumption = 1000
 		addi $t6,$zero,1000
 		sw $t6,consumption
 		j cal_tier1
@@ -137,29 +124,19 @@
 		
 		
 	un_discount_label:
-		#addi $v0,$0,1
-		#lw $a0, discount_flag
-		#syscall
-		# Change tier_three_price
+		# load tier_three_price
 		lw $t2,tier_three_price
-		#sub $t2,$t2,2
-		#sw $t2,tier_three_price
+
 		# Getting the excess
 		lw $t3,consumption
 		sub $t3,$t3,1000
 		# ((consumption-1000)*tier_three_price)
 		mult $t3,$t2
 		mflo $t4
-		#sw $t4,temp_cost
-		#addi $v0,$0,1
-		#lw $a0,temp_cost
-		#syscall
 		lw $t5,total_cost
 		add $t4,$t4,$t5
 		sw $t4,total_cost
-		#addi $v0,$0,1
-		#lw $a0,total_cost
-		#syscall
+
 		# consumption = 1000
 		addi $t6,$zero,1000
 		sw $t6,consumption
@@ -170,26 +147,19 @@
 	
 	cal_tier1:
 		#calculate more than 600 and less than 1000
-		# Change tier_three_price
+		# load tier_two_price
 		lw $t2,tier_two_price
-		#sub $t2,$t2,2
-		#sw $t2,tier_three_price
+		
 		# Getting the excess
 		lw $t3,consumption
 		sub $t3,$t3,600
 		# ((consumption-600)*tier_two_price)
 		mult $t3,$t2
 		mflo $t4
-		#sw $t4,temp_cost
-		#addi $v0,$0,1
-		#lw $a0,temp_cost
-		#syscall
 		lw $t5,total_cost
 		add $t4,$t4,$t5
 		sw $t4,total_cost
-		#addi $v0,$0,1
-		#lw $a0,total_cost
-		#syscall
+
 		# consumption = 600
 		addi $t6,$zero,600
 		sw $t6,consumption
@@ -210,6 +180,7 @@
 		j cal_gst
 	
 	cal_gst:
+		#calculate gst
 		addi $t6,$0,10
 		lw $t7,total_cost
 		div $t7,$t6
@@ -218,6 +189,7 @@
 		j cal_bill
 	
 	cal_bill:
+		#calculate bill
 		lw $t0,total_cost
 		lw $t1,gst
 		add $t1,$t1,$t0
@@ -226,21 +198,16 @@
 		
 		
 	get_ret:
+		#Store the integer and remainder of the results to be printed separately
 		addi $t1, $0, 100
 		lw $t0,bill
-        	div $t0, $t1
-        	mflo $t0
-        	sw $t0, ret_int
-        	mfhi $t3
-        	sw $t3, ret_rem
-        	j end_if
+        div $t0, $t1
+        mflo $t0
+        sw $t0, ret_int
+        mfhi $t3
+        sw $t3, ret_rem
+        j end_if
         	
-
-		
-		
-			
-		
-
 		
 		
 		
@@ -267,40 +234,12 @@
 		la $a0, newLine
 		syscall
 		
-		#Tell the system this end of program.
-		#li $v0,10
-		#syscall
-		#addi $v0, $s0, 10
-		#syscall
+#Tell the system this end of program.
+addi $v0, $0, 10
+syscall
 	
 	
-	
-	
-	
-	
-		
-	#TESTDISC:
-		#addi $v0,$0,1
-		#lw $a0, discount_flag
-		#syscall
-	
-	
-		#addi $t0,$zero,1
-		#addi $t1,$zero,200
-		
-		#slt $s0,$t0,$t1
-		#bne $s0,$zero,printMsg
-		#slt $t2,$t0,$t1
-		#bne $t2,$zero,printMsg
-		
-		#b TESTDISC
-		
-		#li $v0, 4
-		#la $a0,msg2
-		#syscall
-		#b pMsg2
-		
-		
+			
 		
 
 

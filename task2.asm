@@ -1,7 +1,6 @@
 .data
 	height:		.word		0
 	valid_input:	.word		0
-	now_height:	.word		0
 	left_bound:	.word		0
 	right_bound:	.word		0
 	i:		.word		0
@@ -12,8 +11,6 @@
 	prompt:		.asciiz 	"How tall do you want the tower: "
 	top:		.asciiz		"A "
 	un_top:		.asciiz		"* "
-	TEST:		.asciiz		"!TEST!s"
-	TEST2:		.asciiz		"#F!"
 	
 .text
 	main:
@@ -22,13 +19,6 @@
 		beq $t0,$zero,while_loop
 		
 	#exit the program
-	# Print newline
-	#addi $v0, $0, 4
-	#la $a0, newLine
-	#syscall
-	#addi $v0,$0,4
-	#la $a0, TEST
-	#syscall
 	addi $v0, $0, 10
 	syscall	
 	
@@ -65,7 +55,6 @@
 		lw $t0,i
 		addi $t0,$t0,1
 		sw $t0,i
-		#j outer_for_loop
 		
 		#set s
 		addi $t1,$zero,0
@@ -74,10 +63,7 @@
 		addi $t2,$zero,0
 		sw $t2,j
 		
-		#NEW LINE ONLY TEST
-		#addi $v0, $0, 4
-		#la $a0, TEST
-		#syscall
+		#print newline
 		addi $v0, $0, 4
 		la $a0, newLine
 		syscall
@@ -108,7 +94,6 @@
 		addi $t2,$zero,-1
 		mult $t1,$t2
 		mflo $t1
-		#addi $t1,$t1,-1 #tips!!!!!!!!
 		sw $t1,right_bound
 		
 		#set s
@@ -123,10 +108,6 @@
 		addi $v0,$0,4
 		la $a0, space
 		syscall
-		
-		#addi $v0, $0, 4
-		#la $a0, newLine
-		#syscall
 		
 		#set s
 		lw $t0,s
@@ -147,11 +128,6 @@
 		addi $t1,$t0,1
 		sw $t1,right_bound
 		
-		#check j and right_bound
-		#lw $t0,j
-		#lw $t1,right_bound
-		#slt $s0,$t0,$t1
-		#bne $s0,$zero,sec_inner_for_loop
 		j sec_inner_for_loop
 		
 		
