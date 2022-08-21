@@ -159,7 +159,6 @@
 			
 			#get my_list[i] and i
 			lw $t0,8($fp)
-			#lw $t1,-16($fp)#i
 			lw $t1,-8($fp)#i
 			sll $t1,$t1,2#i*4
 			add $t0,$t0,$t1# &(my_list[i])+4
@@ -186,17 +185,13 @@
         		syscall
         		
         		#set smash_count
-        		#lw $t0,-20($fp)
         		lw $t0,-4($fp)
         		addi $t0,$t0,1
-        		#sw $t0,-20($fp)
         		sw $t0,-4($fp)
         		
         		# increment i
-        		#lw $t1, -16($fp)
         		lw $t1, -8($fp)
         		addi $t1, $t1, 1
-        		#sw $t1, -16($fp)
         		sw $t1, -8($fp)
         		
         		j print_loop
@@ -213,10 +208,8 @@
         		syscall
         		
         		# increment i
-        		#lw $t1, -16($fp)
         		lw $t1, -8($fp)
         		addi $t1, $t1, 1
-        		#sw $t1, -16($fp)
         		sw $t1, -8($fp)
         		
         		j print_loop
@@ -224,7 +217,6 @@
         				
         	end_print_loop:
         		#return smash_count in $v0
-        		#lw $v0,-20($fp) #$v0=smash_count
         		lw $v0,-4($fp)
         		
         		#remove local var
