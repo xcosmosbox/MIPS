@@ -35,9 +35,9 @@ combination_aux:
 
 
         # make space to store $fp and $ra
-        addi $sp, $sp, -8
-        sw $fp, ($sp)
-        sw $ra, 4($sp)
+        addi $sp, $sp, -8#make spce
+        sw $fp, ($sp)#store $fp
+        sw $ra, 4($sp)#store $ra
 
         # copy $sp to $fp
         addi $fp, $sp, 0
@@ -47,8 +47,8 @@ combination_aux:
         
 	
 	#init the local j=0
-	addi $t0,$0,0
-	sw $t0,-4($fp)
+	addi $t0,$0,0#load 0 into the $t0
+	sw $t0,-4($fp)#store the value from $t0 to -4($fp)
 	
 	#get index-r
 	lw $t0,20($fp)#get index
@@ -66,7 +66,7 @@ combination_aux:
 	lw $t1,28($fp)#get i
 	addi $t2,$0,4 #4 bytes
 	mult $t1,$t2 #4*i
-	mflo $t3
+	mflo $t3#store the result to $t3
 	add $t3,$t3,$t2 #new_i = 4i+4
 	add $t3,$t3,$t0 #the addr for arr[new_i]
 	lw $t4,($t3) #get the value of arr[new_i]
@@ -76,7 +76,7 @@ combination_aux:
 	lw $t1,20($fp)#get index
 	addi $t2,$0,4 #4 bytes
 	mult $t1,$t2 #4*index
-	mflo $t3
+	mflo $t3#store the result to $t3
 	add $t3,$t3,$t2 #new_index = 4*index + 4
 	add $t3,$t3,$t0 #the addr for arr[new_index]
 	
@@ -91,53 +91,53 @@ combination_aux:
 	#make space for six argument 
 	addi $sp,$sp,-24
 	# store arr as the first argument
-        lw $t0,8($fp)
+        lw $t0,8($fp)#load arr
         sw $t0, ($sp) #(arr)
         # store n as the second argument
-        lw $t0,12($fp)
+        lw $t0,12($fp)#load n
         sw $t0, 4($sp) #(arr,n)
         # store r as the third argument
-        lw $t0,16($fp)
+        lw $t0,16($fp)#load r
         sw $t0, 8($sp) #(arr,n,r)
         # store index+1 as the fourth argument
         sw $t3, 12($sp) #(arr,n,r,index+1)
         # store data as the fifth argument
-        lw $t0,24($fp)
+        lw $t0,24($fp)#load data
         sw $t0, 16($sp) #(arr,n,r,index+1,data)
         # store i+1 as the sixth argument
         sw $t4, 20($sp) #(arr,n,r,index+1,data,i+1)
         # call the funtion
-        jal combination_aux
+        jal combination_aux #goto combination_aux
         
         #remove space of 6 argument
         addi $sp,$sp,24	
         
 
         
-        #Call function combination_aux(arr, n, r, index,data, i + 1)
+    #Call function combination_aux(arr, n, r, index,data, i + 1)
 	lw $t3,20($fp)#get index
 	lw $t4,28($fp)#get i
 	addi $t4,$t4,1#i+1
 	#make space for six argument 
 	addi $sp,$sp,-24
 	# store arr as the first argument
-        lw $t0,8($fp)
+        lw $t0,8($fp)#load arr
         sw $t0, ($sp) #(arr)
         # store n as the second argument
-        lw $t0,12($fp)
+        lw $t0,12($fp)#load n
         sw $t0, 4($sp) #(arr,n)
         # store r as the third argument
-        lw $t0,16($fp)
+        lw $t0,16($fp)#load r
         sw $t0, 8($sp) #(arr,n,r)
         # store index as the fourth argument
         sw $t3, 12($sp) #(arr,n,r,index)
         # store data as the fifth argument
-        lw $t0,24($fp)
+        lw $t0,24($fp)#load data
         sw $t0, 16($sp) #(arr,n,r,index,data)
         # store i+1 as the sixth argument
         sw $t4, 20($sp) #(arr,n,r,index,data,i+1)
         # call the funtion
-        jal combination_aux
+        jal combination_aux #goto combination_aux
         
         #remove space of 6 argument
         addi $sp,$sp,24
@@ -147,11 +147,11 @@ combination_aux:
         
         
 	#restore $fp and $ra and deallocate
-	lw $fp,($sp)
-	lw $ra,4($sp)
-	addi $sp,$sp,8
+	lw $fp,($sp)#load ($sp)
+	lw $ra,4($sp)#load 4($sp)
+	addi $sp,$sp,8#deallocate
 	
-	jr $ra
+	jr $ra #return
 	
 	
 	
@@ -166,20 +166,20 @@ combination_aux:
 		bne $s0,$0,print_data_j#j<r,goto print
 		
 		# print newline
-        	la $a0, newline
-        	addi $v0, $0, 4
-        	syscall
+        la $a0, newline
+        addi $v0, $0, 4
+        syscall
         	
         
 		#deallocate space for local variables
 		addi $sp,$sp,4
 	
 		#restore $fp and $ra and deallocate
-		lw $fp,($sp)
-		lw $ra,4($sp)
-		addi $sp,$sp,8
+		lw $fp,($sp)#load ($sp)
+		lw $ra,4($sp)#load 4($sp)
+		addi $sp,$sp,8#deallocate
 	
-		jr $ra
+		jr $ra #reutrn
 			
 	
 	
@@ -191,18 +191,18 @@ combination_aux:
 		lw $t1,-4($fp)#get j
 		addi $t2,$0,4 #4 bytes
 		mult $t1,$t2 #4*j
-		mflo $t3
+		mflo $t3#store the result into the $t3
 		add $t3,$t3,$t2 #new_index = 4*j + 4
 		add $t3,$t3,$t0 #the addr for data[j]
 		
 		#print data[j]
 		lw $a0,($t3) #get the value of data[j]
-        	addi $v0, $0, 1
+        	addi $v0, $0, 1 #syscall code
         	syscall
         	
         	#print space
-        	la $a0, space
-        	addi $v0, $0, 4
+        	la $a0, space#load space
+        	addi $v0, $0, 4#syscall code
         	syscall
         	
         	#j+=1
@@ -210,7 +210,7 @@ combination_aux:
         	addi $t0,$t0,1#j+1
         	sw $t0,-4($fp)#j+=1
         	
-        	j the_first_if
+        	j the_first_if #goto the_first_if
         	
         	
 		
@@ -221,12 +221,12 @@ combination_aux:
 		addi $sp,$sp,4
 	
 		#restore $fp and $ra and deallocate
-		lw $fp,($sp)
-		lw $ra,4($sp)
-		addi $sp,$sp,8
+		lw $fp,($sp)#load ($sp)
+		lw $ra,4($sp)#load 4($sp)
+		addi $sp,$sp,8#deallocate
 		
 	
-		jr $ra
+		jr $ra#return
 	
 	
 
@@ -245,9 +245,9 @@ print_combination:
             ###########################
 
         # make space to store $fp and $ra
-        addi $sp, $sp, -8
-        sw $fp, ($sp)
-        sw $ra, 4($sp)
+        addi $sp, $sp, -8 #make space
+        sw $fp, ($sp) #store $fp to ($sp)
+        sw $ra, 4($sp)#store $ra to 4($sp)
 
         # copy $sp to $fp
         addi $fp, $sp, 0
@@ -272,38 +272,38 @@ print_combination:
     	lw $t0, -4($fp) # load the starting address of the list
 	
 	# add 0
-    	addi $t1, $0, 0
-    	sw $t1, 4($t0)
+    	addi $t1, $0, 0#load 0
+    	sw $t1, 4($t0)#store 0 into the data[0]
         # add 0
-    	addi $t1, $0, 0
-    	sw $t1, 8($t0)
+    	addi $t1, $0, 0#load 0
+    	sw $t1, 8($t0)#store 0 into the data[1]
     	# add 0
-    	addi $t1, $0, 0
-    	sw $t1, 12($t0)
+    	addi $t1, $0, 0#load 0
+    	sw $t1, 12($t0)#store 0 into the data[2]
     	
     	
     	# store arr as the first argument
-        lw $t0,8($fp)
+        lw $t0,8($fp) #load arr
         sw $t0, ($sp) #(arr)
         
         # store arr as the second argument
-        lw $t0,12($fp)
+        lw $t0,12($fp)#load n
         sw $t0, 4($sp) #(arr,n)
         
         # store arr as the third argument
-        lw $t0,16($fp)
+        lw $t0,16($fp)#load r
         sw $t0, 8($sp) #(arr,n,r)
         
         # store arr as the fourth argument
-        addi $t0,$0,0
+        addi $t0,$0,0#load 0
         sw $t0, 12($sp) #(arr,n,r,0)
         
         # store arr as the fifth argument
-        lw $t0,-4($fp)
+        lw $t0,-4($fp)#load data
         sw $t0, 16($sp) #(arr,n,r,0,data)
         
         # store arr as the sixth argument
-        addi $t0,$0,0
+        addi $t0,$0,0#load 0
         sw $t0, 20($sp) #(arr,n,r,0,data,0)
         
         # call the funtion
@@ -322,7 +322,7 @@ print_combination:
         # deallocate space for $fp and $ra
         addi $sp, $sp, 8
 
-        jr $ra
+        jr $ra #return
                             
                                         
                                                     
@@ -340,9 +340,9 @@ main:
             ###########################
 
         # store $fp and $ra
-        addi $sp, $sp, -8
-        sw $fp, ($sp)
-        sw $ra, 4($sp)
+        addi $sp, $sp, -8#make space
+        sw $fp, ($sp)#store $fp to ($sp)
+        sw $ra, 4($sp)#store $ra to 4($sp)
 
         # copy $sp to $fp
         addi $fp, $sp, 0
@@ -354,54 +354,54 @@ main:
         addi $sp, $sp, -12
         
         #allocate memory for array
-	addi $v0,$zero, 9
+	addi $v0,$zero, 9 #sys code
 	addi $a0,$zero, 24 #(5*4)+4
 	syscall
 	
 	#init the local arr
 	sw $v0,-4($fp) #arr=[]
-	addi $t0,$zero,5
+	addi $t0,$zero,5 #length == 5
 	sw $t0, ($v0) # store the length as the first element
 	
 	# add the elements to the array
     	lw $t0, -4($fp) # load the starting address of the list
 	
 	# add 1
-    	addi $t1, $0, 1
-    	sw $t1, 4($t0)
+    	addi $t1, $0, 1#load 1
+    	sw $t1, 4($t0)#store 1 to the arr[0]
     	# add 2
-    	addi $t1, $0, 2
-    	sw $t1, 8($t0)
+    	addi $t1, $0, 2#load 2
+    	sw $t1, 8($t0)#store 1 to the arr[1]
     	# add 3
-    	addi $t1, $0, 3
-    	sw $t1, 12($t0)
+    	addi $t1, $0, 3#load 3
+    	sw $t1, 12($t0)#store 1 to the arr[2]
     	# add 4
-    	addi $t1, $0, 4
-    	sw $t1, 16($t0)
+    	addi $t1, $0, 4#load 4
+    	sw $t1, 16($t0)#store 1 to the arr[3]
     	# add 5
-    	addi $t1, $0, 5
-    	sw $t1, 20($t0)
+    	addi $t1, $0, 5#load 5
+    	sw $t1, 20($t0)#store 1 to the arr[4]
     	
     	#init r 
-    	addi $t1,$0,3
+    	addi $t1,$0,3 #load 3
     	sw $t1,-8($fp)  #r=3
     	
     	#init n
     	lw $t1,-4($fp)#get arr
-    	lw $t2,($t1)#get n=len(arr)==(5)
-    	sw $t2,-12($fp)
+    	lw $t2,($t1)#get len(arr)
+    	sw $t2,-12($fp) #n=5
     	       
 
         # store arr as the first argument
-        lw $t0,-4($fp)
+        lw $t0,-4($fp)#load arr
         sw $t0, ($sp) #(arr)
         
         # store r as the second argument
-        lw $t0,-12($fp)
+        lw $t0,-12($fp)#loar r
         sw $t0, 4($sp) #(arr,n)
         
         # store n as the third argument
-        lw $t0,-8($fp)
+        lw $t0,-8($fp)#load n
         sw $t0, 8($sp) #(arr,n,r)
         
    

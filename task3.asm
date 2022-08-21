@@ -1,7 +1,7 @@
 .globl smash_or_sad
 .data
 	my_list:	.word		0
-	my_list_length:	.word		0
+	#my_list_length:	.word		0
 	my_list_index:	.word		0
 
 
@@ -10,15 +10,6 @@
 	left:		.asciiz		"Hulk smashed "
 	right:		.asciiz		" people"
 	newLine: 	.asciiz 	"\n"
-
-
-
-
-
-
-
-
-
 
 
 
@@ -39,7 +30,7 @@
 		addi $v0,$zero, 9
 		addi $a0,$zero, 16 #(3*4)+4
 		syscall
-		#sw $v0,my_list #my_list = address # initalize the local variable
+		# initalize the local variable
 		sw $v0,-12($fp) #my_list = []
 		addi $t0,$zero, 3 #t0=3
 		sw $t0,($v0) #my_list.length = 3
@@ -49,29 +40,16 @@
 		
 		# init 10
 		addi $t6,$t6,10
-			#lw $t7,my_list_index
-			#addi $t7,$t7,4
-			#sw $t7,my_list_index
-			#lw $s0,my_list_index
-		#sw $t6,$s0($t0)
 		sw $t6,4($t0)
 		addi $t6,$zero,0 #reset $t6
 		
 		#init 14
 		addi $t6,$t6,14
-			#lw $t7,my_list_index
-			#addi $t7,$t7,4
-			#sw $t7,my_list_index
-		#sw $t6,my_list_index($t0)
 		sw $t6,8($t0)
 		addi $t6,$zero,0 #reset $t6
 		
 		#init 16
 		addi $t6,$t6,16
-			#lw $t7,my_list_index
-			#addi $t7,$t7,4
-			#sw $t7,my_list_index
-		#sw $t8,my_list_index($t0)
 		sw $t6,12($t0)
 		addi $t6,$zero,0 #reset $t6
 		
@@ -102,23 +80,22 @@
 		addi $sp,$sp,8
 		
 		#store return value
-		#result = 
 		sw $v0,-4($fp)
 		
 		# print left
-        	la $a0, left
-        	addi $v0, $0, 4
-        	syscall
+        la $a0, left
+        addi $v0, $0, 4
+        syscall
         	
-        	#print result
-        	lw $a0, -4($fp)
-        	addi $v0, $0, 1
-        	syscall
+        #print result
+        lw $a0, -4($fp)
+        addi $v0, $0, 1
+        syscall
         	
-        	# print right
-        	la $a0, right
-        	addi $v0, $0, 4
-        	syscall
+        # print right
+        la $a0, right
+        addi $v0, $0, 4
+        syscall
 		
 
 	
@@ -127,9 +104,6 @@
 	addi $v0, $0, 4
 	la $a0, newLine
 	syscall
-	#addi $v0,$0,4
-	#la $a0, TEST
-	#syscall
 	addi $v0, $0, 10
 	syscall	
 	
@@ -153,8 +127,6 @@
 		
 		#init i(maybe)
 		sw $zero,-16($fp) #i=0
-		
-		#init len(the_list)   (maybe)
 		
 		
 		#goto for-loop
@@ -218,11 +190,6 @@
         		la $a0, newLine
         		addi $v0, $0, 4
         		syscall
-        		
-        		#set smash_count
-        		#lw $t0,-20($fp)
-        		#addi $t0,$t0,1
-        		#sw $t0,-20($fp)
         		
         		# increment i
         		lw $t1, -16($fp)
