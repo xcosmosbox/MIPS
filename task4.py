@@ -6,14 +6,15 @@ from typing import List, TypeVar
 T = TypeVar('T')
 
 def insertion_sort(the_list: List[T]):
-    length = len(the_list)
-    for i in range(1, length):
-        key = the_list[i]
-        j = i-1
-        while j >= 0 and key < the_list[j] :
-                the_list[j + 1] = the_list[j]
-                j -= 1
-        the_list[j + 1] = key
+    length = len(the_list) # init length
+    for i in range(1, length): # iterate through the array starting from the list[1] of the array
+        key = the_list[i] # set key position(i), let key=list[i]
+        j = i-1 #from before the key position(i-1)
+        while j >= 0 and key < the_list[j] : # j>=0 means range is true
+                                             # if key < the_list[j], exchange their posiotn
+                the_list[j + 1] = the_list[j] # exchang their value 
+                j -= 1 #compaire next value
+        the_list[j + 1] = key #set the min value in key posiont
 
 def main() -> None:
     arr = [6, -2, 7, 4, -10]
