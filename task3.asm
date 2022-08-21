@@ -15,7 +15,14 @@
 
 .text
 
-
+	    # memory diagram
+        ###########################
+	    # my_list     : -12($fp)  #
+	    # hulk_power  : -8($fp)   #
+        # ret         : -4($fp)   #
+        # fp          : ($fp)     #
+        # ra          : 4($fp)    #
+        ###########################
 	main:
 		#copy $sp into $fp
 		addi $fp,$sp,0
@@ -36,7 +43,7 @@
 		sw $t0,($v0) #my_list.length = 3
 		
 		#init array
-		lw $t0,-12($fp) #-4($fp) == my_list
+		lw $t0,-12($fp) #-12($fp) == my_list
 		
 		# init 10
 		addi $t6,$t6,10
@@ -108,7 +115,16 @@
 	syscall	
 	
 	
-	
+
+			# memory diagram
+            ###########################
+            # i           : -8($fp)   #
+            # smash_count : -4($fp)   #
+            # fp          : ($fp)     #
+            # ra          : 4($fp)    #
+            # mylist      : 8($fp)    #
+            # hulk_power  : 12($fp)   #
+            ###########################
 	smash_or_sad:
 		#save $ra and $fp in stack
 		addi $sp,$sp,-8 #make space
@@ -119,14 +135,14 @@
 		addi $fp,$sp,0
 		
 		#Allocate local variable
-		#5*4=20 bytes
-		addi $sp,$sp,-20
+		#2*4=8 bytes
+		addi $sp,$sp,-8
 		
 		#init smash_count
-		sw $zero,-20($fp) #smash_count=0
+		sw $zero,-4($fp) #smash_count=0
 		
 		#init i(maybe)
-		sw $zero,-16($fp) #i=0
+		sw $zero,-8($fp) #i=0
 		
 		
 		#goto for-loop
@@ -135,7 +151,7 @@
 		
 		
 		print_loop:
-			lw $t0,-16($fp)#i
+			lw $t0,-8($fp)#i
 			lw $t1,8($fp)#my_list
 			lw $t2,($t1)#load the length of my_list
 			slt $t0, $t0,$t2# check if i < len(my_list)
@@ -143,9 +159,10 @@
 			
 			#get my_list[i] and i
 			lw $t0,8($fp)
-			lw $t1,-16($fp)#i
+			#lw $t1,-16($fp)#i
+			lw $t1,-8($fp)#i
 			sll $t1,$t1,2#i*4
-			add $t0,$t0,$t1# &(my_list[i])-4
+			add $t0,$t0,$t1# &(my_list[i])+4
 			lw $t3,4($t0)#t3 = my_list[i]
 			
 			#check the_list[i] <= hulk_power
@@ -169,14 +186,18 @@
         		syscall
         		
         		#set smash_count
-        		lw $t0,-20($fp)
+        		#lw $t0,-20($fp)
+        		lw $t0,-4($fp)
         		addi $t0,$t0,1
-        		sw $t0,-20($fp)
+        		#sw $t0,-20($fp)
+        		sw $t0,-4($fp)
         		
         		# increment i
-        		lw $t1, -16($fp)
+        		#lw $t1, -16($fp)
+        		lw $t1, -8($fp)
         		addi $t1, $t1, 1
-        		sw $t1, -16($fp)
+        		#sw $t1, -16($fp)
+        		sw $t1, -8($fp)
         		
         		j print_loop
         		
@@ -192,19 +213,22 @@
         		syscall
         		
         		# increment i
-        		lw $t1, -16($fp)
+        		#lw $t1, -16($fp)
+        		lw $t1, -8($fp)
         		addi $t1, $t1, 1
-        		sw $t1, -16($fp)
+        		#sw $t1, -16($fp)
+        		sw $t1, -8($fp)
         		
         		j print_loop
         		
         				
         	end_print_loop:
         		#return smash_count in $v0
-        		lw $v0,-20($fp) #$v0=smash_count
+        		#lw $v0,-20($fp) #$v0=smash_count
+        		lw $v0,-4($fp)
         		
         		#remove local var
-        		addi $sp,$sp,20
+        		addi $sp,$sp,8
         		
         		#restore $fp and $ra
         		lw $fp,0($sp)
