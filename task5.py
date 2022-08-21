@@ -11,9 +11,9 @@ def print_combination(arr, n, r):
  
 def combination_aux(arr, n, r, index, data, i):
 
-    if (index == r): #if index==r, means all of data array have store elements. The program can print them
+    if (index == r): #if index==r, means all of index of data array have saved elements. The program can print them
         for j in range(r): #set loop counter
-            print(data[j], end = " ") #print each elements for data array
+            print(data[j], end = " ") #print each elements from data array
         print() # print new line
         return #return None value
  
@@ -22,7 +22,7 @@ def combination_aux(arr, n, r, index, data, i):
  
     data[index] = arr[i] #set data value 
     combination_aux(arr, n, r, index + 1,
-                    data, i + 1) # goto next combination_aux() function, and set value for next position
+                    data, i + 1) # goto next combination_aux() function, and set value at next position for data array
  
     combination_aux(arr, n, r, index,
                     data, i + 1) # goto next combination_aux() function, and set value at the same position for data array

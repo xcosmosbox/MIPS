@@ -13,8 +13,8 @@ def insertion_sort(the_list: List[T]):
         while j >= 0 and key < the_list[j] : # j>=0 means range is true
                                              # if key < the_list[j], exchange their posiotn
                 the_list[j + 1] = the_list[j] # exchang their value 
-                j -= 1 #compaire next value
-        the_list[j + 1] = key #set the min value in key posiont
+                j -= 1 #set the position to next value to compare 
+        the_list[j + 1] = key #store key value
 
 def main() -> None:
     arr = [6, -2, 7, 4, -10]
